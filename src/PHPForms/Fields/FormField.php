@@ -16,12 +16,14 @@ class FormField {
 
     protected $tag = 'input';
 
+    protected $shouldRender = true;
+
     public function __construct($name, $type, array $options = []){
         $this->name = $name;
         $this->type = $type;
         $this->options = $options;
     }
-    public function render(){
+    protected function renderField(){
         print_r($this->options);
         $result = "";
         $result .= "<{$this->tag} type='{$this->type}' name='{$this->name}'";
@@ -34,5 +36,11 @@ class FormField {
 
         $result .= ">";
         return  $result;
+    }
+    public function render(){
+        if($this->shouldRender){
+            $this->rendered = true;
+            return $this->renderField();
+        }
     }
 }

@@ -7,10 +7,15 @@
  */
 use PHPForms\Fields\FormField;
 class Forms {
-    private $fields = array();
+    protected $method = 'GET';
+    protected $url;
+    protected $fields = array();
+    protected $errors = array();
 
-    public function __construct() {
+    public function __construct($method = "", $url = "") {
         $this->fields = array();
+        $this->method = $method;
+        $this->url = $url;
     }
 
     public function addField(FormField $field) {
@@ -28,7 +33,14 @@ class Forms {
         return $this;
     }
     public function asParagraph(){
-        $result = "<form>";
+        $result = '<form';
+        if($this->method !== ""){
+            $result .= " method='{$this->method}'";
+        }
+        if($this->url !== ""){
+            $result .= " action='{$this->url}''";
+        }
+        $result .= '>';
         foreach($this->fields as $field){
             $result .= "<p>";
             $result .= $field->render();

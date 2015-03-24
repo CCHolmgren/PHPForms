@@ -21,14 +21,20 @@ function __autoload($name){
     include __SITEROOT__ . '/src/' . $name . '.php';
 }
 use PHPForms\Forms\FormBuilder;
+use PHPForms\Fields\FormField;
+use PHPForms\Fields\ButtonField;
+use PHPForms\Fields\ButtonButtonField;
+use PHPForms\Fields\PasswordField;
 
 $form = new FormBuilder();
 $form->addField(
-        new \PHPForms\Fields\FormField('test', 'text', ['value' => 'Hello there']))
+        new FormField('test', 'text', ['value' => 'Hello there']))
     ->addButton('Submit', ['onclick' => 'alert("test")'])
-    ->addField(new \PhpForms\Fields\ButtonField('', 'button'))
-    ->addField(
-        new \PHPForms\Fields\FormField('test', 'text', ['value' => 'Hello there']));
+    ->addField(new ButtonField('', 'button'))
+    ->addField(new ButtonButtonField(['text'=>'Hello there']))
+    ->addField(new PasswordField('password'))
+    ->addField(new ButtonField('Submit', 'submit'))
+    ->addField(new FormField('test', 'text', ['value' => 'Hello there']));
 echo $form->form()->asParagraph();
 ?>
 </body>

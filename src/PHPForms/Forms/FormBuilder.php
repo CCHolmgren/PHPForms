@@ -8,7 +8,7 @@
 use PHPForms\Fields\FormField;
 
 class FormBuilder {
-    private $form;
+    protected $form;
 
     public function __construct() {
         $this->form = new Forms();
@@ -29,5 +29,7 @@ class FormBuilder {
      */
     public function form() {
         return $this->form;
+    }
+    public function validate(){
     }
 }
