@@ -18,23 +18,35 @@ class FormField {
 
     protected $shouldRender = true;
 
-    public function __construct($name, $type, array $options = []){
+    protected $selfClosing = true;
+
+    protected $text;
+
+    public function __construct($name = "", $type = 'input', array $options = [], $text = ""){
         $this->name = $name;
         $this->type = $type;
         $this->options = $options;
+        $this->text = $text;
     }
     protected function renderField(){
         print_r($this->options);
         $result = "";
-        $result .= "<{$this->tag} type='{$this->type}' name='{$this->name}'";
+        $result .= "<{$this->tag}";
+        if($this->type !== ""){
+            $result .= " type='{$this->type}'";
+        }
         if($this->name !== ""){
-            $result .= "name = {$this->name}";
+            $result .= " name='{$this->name}'";
         }
         foreach($this->options as $key=>$value){
-            $result .= "$key=$value ";
+            $result .= " $key=$value ";
         }
 
         $result .= ">";
+        if(!$this->selfClosing){
+            $result .= $this->text;
+            $result .= "</{$this->tag}>";
+        }
         return  $result;
     }
     public function render(){

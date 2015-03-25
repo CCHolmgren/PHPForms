@@ -8,7 +8,7 @@
 use PHPForms\Fields\FormField;
 
 class FormBuilder {
-    protected $form;
+    public $form;
 
     public function __construct() {
         $this->form = new Forms();
@@ -22,13 +22,6 @@ class FormBuilder {
     public function addButton($value, $options = []){
         $this->form->addButton($value, $options);
         return $this;
-    }
-
-    /**
-     * @return Forms
-     */
-    public function form() {
-        return $this->form;
     }
     public function validate(){
     }

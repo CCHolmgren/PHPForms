@@ -31,11 +31,11 @@ $form->addField(
         new FormField('test', 'text', ['value' => 'Hello there']))
     ->addButton('Submit', ['onclick' => 'alert("test")'])
     ->addField(new ButtonField('', 'button'))
-    ->addField(new ButtonButtonField(['text'=>'Hello there']))
+    ->addField(new ButtonButtonField(['text'=>'Hello there'], 'Hello there'))
     ->addField(new PasswordField('password'))
     ->addField(new ButtonField('Submit', 'submit'))
     ->addField(new FormField('test', 'text', ['value' => 'Hello there']));
-echo $form->form()->asParagraph();
+echo $form->form->asParagraph();
 ?>
 </body>
 </html>
