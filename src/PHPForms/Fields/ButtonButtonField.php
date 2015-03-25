@@ -6,7 +6,6 @@
  * Time: 16:12
  */
 class ButtonButtonField extends FormField {
-    protected $type = 'button';
     protected $selfClosing = false;
     protected $tag = 'button';
 
