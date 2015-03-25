@@ -25,4 +25,7 @@ class FormBuilder {
     }
     public function validate(){
     }
+    public function addData($data){
+        $this->form->addData($data);
+    }
 }

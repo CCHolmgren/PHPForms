@@ -8,9 +8,4 @@
 class ButtonButtonField extends FormField {
     protected $selfClosing = false;
     protected $tag = 'button';
-
-    public function __construct(array $options = [], $text){
-        $this->options = array_merge(['text' => ''], $options);
-        $this->text = $text;
-    }
 }

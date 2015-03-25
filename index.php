@@ -28,16 +28,24 @@ use PHPForms\Fields\PasswordField;
 use PHPForms\Fields\TextareaField;
 
 $form = new FormBuilder();
+//The fields are instantiated with the values $name, $type, $options
+//Text that should appear under value, is placed under $options['value'] and so on
+//Attrbutes are placed under $options['attributes'] and css - classes $options['classes']
 $form->addField(
-        new FormField('test', 'text', ['value' => 'Hello there']))
-    ->addButton('Submit', ['onclick' => 'alert("test")'])
-    ->addField(new ButtonField('', 'button'))
-    ->addField(new ButtonButtonField(['text'=>'Hello there'], 'Hello there'))
+        new FormField('test', 'text'))
+    ->addButton('Submit', ['onclick' => 'alert("test")', 'style'=>'border:10px solid black;'])
+    ->addField(new ButtonField('', 'button', ['value'=>'Empty click']))
+    ->addField(new ButtonButtonField('', '',['value'=>'Hello there']))
     ->addField(new PasswordField('password'))
-    ->addField(new ButtonField('Submit', 'submit'))
-    ->addField(new TextareaField('test-name', [], 'Hello the textarea'))
-    ->addField(new FormField('test', 'text', ['value' => 'Hello there']));
+    ->addField(new ButtonField('', 'submit', ['value'=>'Another one']))
+    ->addField(new TextareaField('test-name', '', ['value'=>'Hello the textarea']))
+    ->addField(new FormField('test', 'text'));
+
 echo $form->form->asParagraph();
+
+$form->addData(['test' => 'Hello there from newly added data', 'password' => 'This is my super secret password']);
+echo $form->form->asUnorderedList();
+echo $form->form->asTable();
 ?>
 </body>
 </html>

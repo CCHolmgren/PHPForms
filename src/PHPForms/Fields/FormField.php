@@ -57,13 +57,12 @@ class FormField {
      * Used in <input value='$text'> or <button>$text</button>
      * @var string
      */
-    protected $text;
-
-    public function __construct($name = "", $type = 'input', array $options = [], $text = ""){
+    protected $value;
+    public function __construct($name = '', $type = '', array $options = []){
         $this->name = $name;
         $this->type = $type;
-        $this->options = array_merge([], $options);
-        $this->text = $text;
+        $this->options = array_merge(['value' => null, 'attributes' => [], 'classes' => []], $options);
+        $this->value = $this->options['value'];
     }
 
     /**
@@ -73,7 +72,6 @@ class FormField {
      * @return string
      */
     protected function renderField(){
-        print_r($this->options);
         $result = "";
         $result .= "<{$this->tag}";
         if($this->type !== ""){
@@ -82,13 +80,25 @@ class FormField {
         if($this->name !== ""){
             $result .= " name='{$this->name}'";
         }
-        foreach($this->options as $key=>$value){
-            $result .= " $key=$value ";
+        if(!empty($this->options['attributes'])){
+            foreach($this->options['attributes'] as $key=>$value){
+                $result .= " $key='$value' ";
+            }
         }
-
+        $result .= " value='{$this->value}'";
+        if(!empty($this->options['classes'])){
+            $result .= " class='";
+            foreach($this->options['classes'] as $value){
+                $result .= $value;
+            }
+            $result .= "'";
+        }
+        if(isset($this->options['style'])){
+            $result .= " style='{$this->options['style']}'";
+        }
         $result .= ">";
         if(!$this->selfClosing){
-            $result .= $this->text;
+            $result .= $this->value;
             $result .= "</{$this->tag}>";
         }
         return  $result;
@@ -103,5 +113,26 @@ class FormField {
             $this->rendered = true;
             return $this->renderField();
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getName() {
+        return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getValue() {
+        return $this->value;
+    }
+
+    /**
+     * @param string $text
+     */
+    public function setValue($text) {
+        $this->value = $text;
     }
 }

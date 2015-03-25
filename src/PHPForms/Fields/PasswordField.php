@@ -7,8 +7,4 @@
  */
 class PasswordField extends FormField {
     protected $type = 'password';
-    public function __construct($name, array $options = []){
-        $this->name = $name;
-        $this->options = $options;
-    }
 }
