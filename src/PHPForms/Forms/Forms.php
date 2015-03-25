@@ -43,7 +43,7 @@ class Forms {
     /**
      * Specialized method for adding a submit button to the form
      * Won't place it at the bottom
-     * @param string $name
+     * @param string $value
      * @param array $options
      * @return Forms $this
      */
@@ -85,47 +85,63 @@ class Forms {
     }
 
     /**
-     * Renders this form with all elements wrapped in a list, <ul><li></li></ul> structure
-     * This is like Django's to_ul method for forms
+     * @param $formData
      * @return string
      */
-    public function asUnorderedList(){
+    protected function formatForm($formData){
         $result = '<form';
         if($this->method !== ""){
             $result .= " method='{$this->method}'";
         }
         if($this->url !== ""){
-            $result .= " action='{$this->url}''";
+            $result .= " action='{$this->url}'";
         }
         $result .= '>';
-        $result .= '<ul>';
+        $result .= $formData;
+        $result .= "</form>";
+        return $result;
+    }
+    /**
+     * Renders this form with all elements wrapped in a list, <ul><li></li></ul> structure
+     * This is like Django's to_ul method for forms
+     * @return string
+     */
+    public function asUnorderedList(){
+        $result = '<ul>';
         foreach($this->fields as $field){
             $result .= "<li>";
             $result .= $field->render();
             $result .= "</li>";
         }
         $result .= '</ul>';
-        $result .= "</form>";
-        return $result;
+        return $this->formatForm($result);
     }
 
+    /**
+     * @return string
+     */
     public function asTable() {
-        $result = '<form';
-        if($this->method !== ""){
-            $result .= " method='{$this->method}'";
-        }
-        if($this->url !== ""){
-            $result .= " action='{$this->url}''";
-        }
-        $result .= '>';
-        $result .= '<table>';
+        $result = '<table>';
         foreach($this->fields as $field){
             $result .= "<tr>";
             $result .= "<td>" . $field->render() . "</td>";
             $result .= "</tr>";
         }
         $result .= '</table>';
-        $result .= "</form>";
-        return $result;
+        return $this->formatForm($result);
+    }
+
+    /**
+     * @return string
+     */
+    public function asDivs(){
+        $result = '<div>';
+        foreach($this->fields as $field){
+            $result .= "<div>";
+            $result .= $field->render();
+            $result .= "</div>";
+        }
+        $result .= '</div>';
+        return $this->formatForm($result);
     }
 }
