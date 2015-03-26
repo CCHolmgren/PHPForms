@@ -5,6 +5,7 @@
  * Date: 2015-03-23
  * Time: 14:33
  */
+use PHPForms\Validators\Validator;
 class FormField {
     /**
      * Name of the field
@@ -58,11 +59,19 @@ class FormField {
      * @var string
      */
     protected $value;
-    public function __construct($name = '', $type = '', array $options = []){
+
+    protected $errors = array();
+
+    /**
+     * @var array PHPForms\Validators\Validator
+     */
+    public $validators = array();
+    public function __construct($name = '', $type = '', array $options = [], array $validators = []){
         $this->name = $name;
         $this->type = $type;
         $this->options = array_merge(['value' => null, 'attributes' => [], 'classes' => []], $options);
         $this->value = $this->options['value'];
+        $this->validators = $validators;
     }
 
     /**
@@ -134,5 +143,23 @@ class FormField {
      */
     public function setValue($text) {
         $this->value = $text;
+    }
+
+    /**
+     * @return array
+     */
+    public function getErrors() {
+        return $this->errors;
+    }
+
+    /**
+     *
+     */
+    public function validate(){
+        if(isset($this->validators)){
+            foreach($this->validators as $validator){
+                $this->errors[] = $validator->validate($this->value);
+            }
+        }
     }
 }

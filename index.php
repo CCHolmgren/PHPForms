@@ -26,24 +26,36 @@ use PHPForms\Fields\ButtonField;
 use PHPForms\Fields\ButtonButtonField;
 use PHPForms\Fields\PasswordField;
 use PHPForms\Fields\TextareaField;
+use PHPForms\Validators\Validator;
 
+class ValidatorYes implements Validator{
+    public function validate($value){
+        echo "Validate called with some odd value:  $value";
+        return "This is not right!";
+    }
+}
+
+function validate($value){
+    echo "Validate called with $value";
+    return "This is not right!";
+}
 $form = new FormBuilder();
 //The fields are instantiated with the values $name, $type, $options
 //Text that should appear under value, is placed under $options['value'] and so on
 //Attrbutes are placed under $options['attributes'] and css - classes $options['classes']
 $form->addField(
-        new FormField('test', 'text'))
-    ->addButton('Submit', ['onclick' => 'alert("test")', 'style'=>'border:10px solid black;'])
-    ->addField(new ButtonField('', 'button', ['value'=>'Empty click']))
-    ->addField(new ButtonButtonField('', '',['value'=>'Hello there']))
-    ->addField(new PasswordField('password'))
-    ->addField(new ButtonField('', 'submit', ['value'=>'Another one']))
-    ->addField(new TextareaField('test-name', '', ['value'=>'Hello the textarea']))
+        new FormField('test', 'text', ['value'=>"Test"], [new ValidatorYes()]))
+    //->addButton('Submit', ['onclick' => 'alert("test")', 'style'=>'border:10px solid black;'])
+    //->addField(new ButtonField('', 'button', ['value'=>'Empty click']))
+    //->addField(new ButtonButtonField('', '',['value'=>'Hello there']))
+    //->addField(new PasswordField('password'))
+    //->addField(new ButtonField('', 'submit', ['value'=>'Another one']))
+    //->addField(new TextareaField('test-name', '', ['value'=>'Hello the textarea']))
     ->addField(new FormField('test', 'text'));
 
 echo $form->form->asParagraph();
 
-$form->addData(['test' => 'Hello there from newly added data', 'password' => 'This is my super secret password']);
+$form->addData(['test' => 'Hello there from newly added data'/*, 'password' => 'This is my super secret password'*/]);
 echo $form->form->asUnorderedList();
 echo $form->form->asTable();
 ?>

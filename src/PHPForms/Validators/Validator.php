@@ -1,4 +1,4 @@
-<?php
+<?php namespace PHPForms\Validators;
 /**
  * Created by PhpStorm.
  * User: Chrille
@@ -6,5 +6,5 @@
  * Time: 15:23
  */
 interface Validator {
-
+    public function validate($value);
 }

@@ -26,9 +26,12 @@ class Forms {
      * @return Forms $this
      */
     public function addField(FormField $field) {
-        $this->fields[] = $field;
-        $this->fieldNames[$field->getName()] = $field;
-
+        if(!isset($this->fieldNames[$field->getName()])){
+            $this->fields[] = $field;
+            $this->fieldNames[$field->getName()] = $field;
+        } else {
+            trigger_error("You cannot add a field with name: {$field->getName()}, since there has already been one added.");
+        }
         return $this;
     }
 
@@ -56,8 +59,10 @@ class Forms {
     }
     public function addData($data){
         foreach($data as $key=>$value){
-            if($this->fieldNames[$key]){
+            if (isset($this->fieldNames[$key])) {
+                var_dump($this->fieldNames[$key]);
                 $this->fieldNames[$key]->setValue($value);
+                $this->fieldNames[$key]->validate();
             }
         }
     }
@@ -143,5 +148,11 @@ class Forms {
         }
         $result .= '</div>';
         return $this->formatForm($result);
+    }
+    public function getErrors(){
+        foreach($this->fieldNames as $key=>$value){
+            $this->errors[$key] = $value->getErrors();
+        }
+        return $this->errors;
     }
 }
