@@ -122,6 +122,7 @@ class FormField {
             $this->rendered = true;
             return $this->renderField();
         }
+        return "";
     }
 
     /**
@@ -157,8 +158,12 @@ class FormField {
      */
     public function validate(){
         if(isset($this->validators)){
+            /** @var Validator $validator */
             foreach($this->validators as $validator){
-                $this->errors[] = $validator->validate($this->value);
+                $result = $validator->validate($this->value);
+                if($result !== null){
+                    $this->errors[] = $result;
+                }
             }
         }
     }

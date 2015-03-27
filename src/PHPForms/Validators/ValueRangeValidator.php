@@ -1,22 +1,28 @@
-<?php namespace PHPForms\Validators;
+<?php
 /**
  * Created by PhpStorm.
  * User: Chrille
  * Date: 2015-03-26
- * Time: 15:40
+ * Time: 16:31
  */
-class MaxValueValidator implements Validator{
+
+namespace PHPForms\Validators;
+
+
+class ValueRangeValidator implements Validator {
+    protected $minValue;
     protected $maxValue;
     protected $message;
-    public function __construct($maxValue,$message){
+    public function __construct($minValue, $maxValue, $message){
+        $this->minValue = $minValue;
         $this->maxValue = $maxValue;
         $this->message = $message;
     }
     public function validate($value){
-        if($value > $this->maxValue){
+        if($this->minValue > $value || $value > $this->maxValue){
             return $this->message;
         } else {
             return null;
         }
     }
-}
+} 

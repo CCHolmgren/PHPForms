@@ -13,11 +13,14 @@ class Forms {
     protected $fields = array();
     protected $fieldNames = array();
     protected $errors = array();
+    protected $errorCount = 0;
+    protected $formAttributes = array();
 
-    public function __construct($method = "", $url = "") {
+    public function __construct($method = "GET", $url = "", array $attributes = []) {
         $this->fields = array();
         $this->method = $method;
         $this->url = $url;
+        $this->formAttributes = $attributes;
     }
 
     /**
@@ -51,49 +54,55 @@ class Forms {
      * @return Forms $this
      */
     //TODO: Make it use ButtonField better
-    public function addButton($value, $options = []){
+    public function addButton($value, array $options = []){
         $options = array_merge(['value' => $value], $options);
         $this->fields[] = new ButtonField('', 'submit', $options);
 
         return $this;
     }
-    public function addData($data){
-        foreach($data as $key=>$value){
-            if (isset($this->fieldNames[$key])) {
-                var_dump($this->fieldNames[$key]);
-                $this->fieldNames[$key]->setValue($value);
-                $this->fieldNames[$key]->validate();
-            }
-        }
-    }
+
     /**
-     * Renders this field with all elements wrapped in paragraphs, <p>
-     * This is like Django's to_p method for forms
-     * @return string
+     * Tries to create the field, and if it doesn't exist, create a generic FormField one
+     * If the specialized class exists, it is assume to take the same arguments as FormField does
+     * @param $field string Name of the class, and file, that should be created
+     * @param $name string See $name on __construct on FormField
+     * @param $type string See $type on __construct on FormField
+     * @param array $options See $options on __construct on FormField
+     * @param array $validators See $validators on __construct on FormField
      */
-    public function asParagraph(){
-        $result = '<form';
-        if($this->method !== ""){
-            $result .= " method='{$this->method}'";
+    public function add($field, $name, $type, $options = [], $validators = []){
+        $options = array_merge([], $options);
+        $field = 'PHPForms\\Fields\\' . $field . 'Field';
+        if(class_exists($field)){
+            echo "Class existed";
+            $this->fields[] = new $field($name, $type, $options, $validators);
+        } else {
+            echo "Class did not exist";
+            $this->fields[] = new FormField($name, $type, $options, $validators);
         }
-        if($this->url !== ""){
-            $result .= " action='{$this->url}''";
-        }
-        $result .= '>';
-        foreach($this->fields as $field){
-            $result .= "<p>";
-            $result .= $field->render();
-            $result .= "</p>";
-        }
-        $result .= "</form>";
-        return $result;
+
     }
 
     /**
-     * @param $formData
-     * @return string
+     * Takes data, given field names, adds it to the field and validates it
+     * Maybe it should be the other way around? (validate($data)?)
+     * $data comes in the form [$fieldname => $valuetoaddtothatfield[, ...]]
+     * ]
+     * TODO: Change the order, so that validate happens first
+     * @param array $data Associative array with values to add to the given field with same name as the key in $data
      */
-    protected function formatForm($formData){
+    public function addData($data){
+        foreach($data as $key=>$value){
+            $field = isset($this->fieldNames[$key]) ? $this->fieldNames[$key] : false;
+            if ($field) {
+                /** @var FormField $field */
+                $field = $this->fieldNames[$key];
+                $field->setValue($value);
+                $field->validate();
+            }
+        }
+    }
+    public function getFormStart(){
         $result = '<form';
         if($this->method !== ""){
             $result .= " method='{$this->method}'";
@@ -101,14 +110,31 @@ class Forms {
         if($this->url !== ""){
             $result .= " action='{$this->url}'";
         }
+        if(isset($this->formAttributes)){
+            foreach($this->formAttributes as $key=>$value){
+                $result .= " $key='$value'";
+            }
+        }
         $result .= '>';
+        return $result;
+    }
+    public function getFormEnd(){
+        $result = "</form>";
+        return $result;
+    }
+    /**
+     * @param $formData
+     * @return string
+     */
+    protected function formatForm($formData){
+        $result = $this->getFormStart();
         $result .= $formData;
-        $result .= "</form>";
+        $result .= $this->getFormEnd();
         return $result;
     }
     /**
      * Renders this form with all elements wrapped in a list, <ul><li></li></ul> structure
-     * This is like Django's to_ul method for forms
+     * This is like Django's as_ul method for forms
      * @return string
      */
     public function asUnorderedList(){
@@ -135,7 +161,21 @@ class Forms {
         $result .= '</table>';
         return $this->formatForm($result);
     }
-
+    /**
+     * Renders this field with all elements wrapped in paragraphs, <p>
+     * This is like Django's as_p method for forms
+     * @return string
+     */
+    public function asParagraph(){
+        $result = '';
+        /** @var FromField $field */
+        foreach($this->fields as $field){
+            $result .= "<p>";
+            $result .= $field->render();
+            $result .= "</p>";
+        }
+        return $this->formatForm($result);
+    }
     /**
      * @return string
      */
@@ -151,8 +191,12 @@ class Forms {
     }
     public function getErrors(){
         foreach($this->fieldNames as $key=>$value){
-            $this->errors[$key] = $value->getErrors();
+            $errors = $value->getErrors();
+            $this->errors[$key] = $errors;
         }
         return $this->errors;
+    }
+    public function isValid(){
+        return count($this->errors, COUNT_RECURSIVE) - count($this->errors) == 0;
     }
 }

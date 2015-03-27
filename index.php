@@ -18,7 +18,10 @@ define('__SITEROOT__', realpath(dirname(__FILE__)));
 //require_once(__SITEROOT__ . '/src/PHPForms/Fields/FormField.php');
 function __autoload($name){
     echo $name;
-    include __SITEROOT__ . '/src/' . $name . '.php';
+    if(file_exists(__SITEROOT__ . '/src/' . $name . '.php')){
+        include_once __SITEROOT__ . '/src/' . $name . '.php';
+    }
+
 }
 use PHPForms\Forms\FormBuilder;
 use PHPForms\Fields\FormField;
@@ -44,20 +47,28 @@ $form = new FormBuilder();
 //Text that should appear under value, is placed under $options['value'] and so on
 //Attrbutes are placed under $options['attributes'] and css - classes $options['classes']
 $form->addField(
-        new FormField('test', 'text', ['value'=>"Test"], [new ValidatorYes()]))
+        new FormField('test', 'number', ['value'=>"Test"], [new \PHPForms\Validators\ValueRangeValidator(1, 3, "Value must be between 1 and 3")/*, new \PHPForms\Validators\MinValueValidator(8, "Value must be at least 8.")*/, new \PHPForms\Validators\MaxValueValidator(5, "Value must be at most 5.")]))
     //->addButton('Submit', ['onclick' => 'alert("test")', 'style'=>'border:10px solid black;'])
     //->addField(new ButtonField('', 'button', ['value'=>'Empty click']))
     //->addField(new ButtonButtonField('', '',['value'=>'Hello there']))
     //->addField(new PasswordField('password'))
-    //->addField(new ButtonField('', 'submit', ['value'=>'Another one']))
+    ->addField(new ButtonField('', 'submit', ['value'=>'Another one']))
+    ->add('Button', '', '')
+    ->add('PasswordField', '','');
     //->addField(new TextareaField('test-name', '', ['value'=>'Hello the textarea']))
-    ->addField(new FormField('test', 'text'));
+    //->addField(new FormField('test', 'text'));
 
 echo $form->form->asParagraph();
 
-$form->addData(['test' => 'Hello there from newly added data'/*, 'password' => 'This is my super secret password'*/]);
+$form->addData($_GET);
 echo $form->form->asUnorderedList();
 echo $form->form->asTable();
+var_dump($form->form->getErrors());
+if($form->form->isValid()){
+    echo "The form is valid";
+} else {
+    echo "The form is not valid";
+}
 ?>
 </body>
 </html>

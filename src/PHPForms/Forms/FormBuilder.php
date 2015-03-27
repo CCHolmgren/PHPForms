@@ -10,10 +10,13 @@ use PHPForms\Fields\FormField;
 class FormBuilder {
     public $form;
 
-    public function __construct() {
-        $this->form = new Forms();
+    public function __construct($method = 'GET', $url = '', array $attributes = []) {
+        $this->form = new Forms($method, $url, $attributes);
     }
-
+    public function add($field, $name, $type, $options = [], $validators = []){
+        $this->form->add($field, $name, $type, $options, $validators);
+        return $this;
+    }
     public function addField(FormField $field) {
         $this->form->addField($field);
 
