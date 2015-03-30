@@ -32,7 +32,9 @@ class Forms {
         var_dump($field);
         if($field->getName() == '' || !isset($this->fieldNames[$field->getName()])){
             $this->fields[] = $field;
-            $this->fieldNames[$field->getName()] = $field;
+            if($field->getName() != ''){
+                $this->fieldNames[$field->getName()] = $field;
+            }
         } else {
             trigger_error("You cannot add a field with name: {$field->getName()}, since there has already been one added.");
         }
@@ -167,7 +169,7 @@ class Forms {
      */
     public function asParagraph(){
         $result = '';
-        /** @var FromField $field */
+        /** @var FormField $field */
         foreach($this->fields as $field){
             $result .= "<p>";
             $result .= $field->render();

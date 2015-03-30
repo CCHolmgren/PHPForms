@@ -34,11 +34,11 @@ class ValidatorYes implements Validator{
         return "This is not right!";
     }
 }
-$form = new FormBuilder();
+$formbuilder = new FormBuilder();
 //The fields are instantiated with the values $name, $type, $options
 //Text that should appear under value, is placed under $options['value'] and so on
 //Attrbutes are placed under $options['attributes'] and css - classes $options['classes']
-$form->addField(
+$formbuilder->addField(
         new FormField('test', 'number', ['value'=>"Test"], [new \PHPForms\Validators\ValueRangeValidator(1, 3, "Value must be between 1 and 3")/*, new \PHPForms\Validators\MinValueValidator(8, "Value must be at least 8.")*/, new \PHPForms\Validators\MaxValueValidator(5, "Value must be at most 5."), new \PHPForms\Validators\RegexValidator('/3/', "Must not be 3", true),
         new \PHPForms\Validators\RegexValidator('/2/', "Must be 2", false), function($value){
                 return "No can do!";
@@ -53,20 +53,20 @@ $form->addField(
     ->addField(new TextareaField('test-name', '', ['value'=>'Hello the textarea']))
     ->addField(new FormField('someothername', 'text'));
 
-echo $form->form->asParagraph();
+echo $formbuilder->form->asParagraph();
 
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
-    $form->addData($_POST);
+    $formbuilder->addData($_POST);
 } else if($_SERVER['REQUEST_METHOD'] == 'GET'){
-    $form->addData($_GET);
+    $formbuilder->addData($_GET);
 }
 
-echo $form->form->asUnorderedList();
-$form->form->setMethod('POST');
-echo $form->form->asTable();
-var_dump($form->form->getErrors());
+echo $formbuilder->form->asUnorderedList();
+$formbuilder->form->setMethod('POST');
+echo $formbuilder->form->asTable();
+var_dump($formbuilder->form->getErrors());
 
-if($form->form->isValid()){
+if($formbuilder->form->isValid()){
     echo "The form is valid";
 } else {
     echo "The form is not valid";
