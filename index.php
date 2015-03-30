@@ -40,7 +40,9 @@ $form = new FormBuilder();
 //Attrbutes are placed under $options['attributes'] and css - classes $options['classes']
 $form->addField(
         new FormField('test', 'number', ['value'=>"Test"], [new \PHPForms\Validators\ValueRangeValidator(1, 3, "Value must be between 1 and 3")/*, new \PHPForms\Validators\MinValueValidator(8, "Value must be at least 8.")*/, new \PHPForms\Validators\MaxValueValidator(5, "Value must be at most 5."), new \PHPForms\Validators\RegexValidator('/3/', "Must not be 3", true),
-        new \PHPForms\Validators\RegexValidator('/2/', "Must be 2", false)]))
+        new \PHPForms\Validators\RegexValidator('/2/', "Must be 2", false), function($value){
+                return "No can do!";
+            }]))
     ->addButton('Submit', ['onclick' => 'alert("test")', 'style'=>'border:10px solid black;'])
     ->addField(new ButtonField('', 'button', ['value'=>'Empty click']))
     ->addField(new ButtonButtonField('', '',['value'=>'Hello there']))

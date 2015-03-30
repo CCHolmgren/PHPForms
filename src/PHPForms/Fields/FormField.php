@@ -158,9 +158,13 @@ class FormField {
      */
     public function validate(){
         if(isset($this->validators)){
-            /** @var Validator $validator */
+            /** @var $validator */
             foreach($this->validators as $validator){
-                $result = $validator->validate($this->value);
+                if($validator instanceof Validator){
+                    $result = $validator->validate($this->value);
+                } else {
+                    $result = $validator($this->value);
+                }
                 if($result !== null){
                     $this->errors[] = $result;
                 }
