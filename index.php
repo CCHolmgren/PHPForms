@@ -27,6 +27,7 @@ use PHPForms\Fields\ButtonButtonField;
 use PHPForms\Fields\PasswordField;
 use PHPForms\Fields\TextareaField;
 use PHPForms\Validators\Validator;
+use PHPForms\Fields\LegendField;
 
 class ValidatorYes implements Validator{
     public function validate($value){
@@ -34,6 +35,9 @@ class ValidatorYes implements Validator{
         return "This is not right!";
     }
 }
+$fieldset = new \PHPForms\Fields\FieldsetField();
+$fieldset->addField(new ButtonField('', 'button', ['value'=>'Empty click']));
+$fieldset->addField(new LegendField('', '', ['value'=>'Testing, testing']));
 $formbuilder = new FormBuilder();
 //The fields are instantiated with the values $name, $type, $options
 //Text that should appear under value, is placed under $options['value'] and so on
@@ -51,7 +55,8 @@ $formbuilder->addField(
     ->add('Button', '', '')
     ->add('PasswordField', '','')
     ->addField(new TextareaField('test-name', '', ['value'=>'Hello the textarea']))
-    ->addField(new FormField('someothername', 'text'));
+    ->addField(new FormField('someothername', 'text'))
+    ->addField($fieldset);
 
 echo $formbuilder->form->asParagraph();
 
