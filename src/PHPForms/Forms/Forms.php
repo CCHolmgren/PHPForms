@@ -29,7 +29,8 @@ class Forms {
      * @return Forms $this
      */
     public function addField(FormField $field) {
-        if(!isset($this->fieldNames[$field->getName()])){
+        var_dump($field);
+        if($field->getName() == '' || !isset($this->fieldNames[$field->getName()])){
             $this->fields[] = $field;
             $this->fieldNames[$field->getName()] = $field;
         } else {
@@ -80,14 +81,12 @@ class Forms {
             echo "Class did not exist";
             $this->fields[] = new FormField($name, $type, $options, $validators);
         }
-
     }
 
     /**
      * Takes data, given field names, adds it to the field and validates it
      * Maybe it should be the other way around? (validate($data)?)
      * $data comes in the form [$fieldname => $valuetoaddtothatfield[, ...]]
-     * ]
      * TODO: Change the order, so that validate happens first
      * @param array $data Associative array with values to add to the given field with same name as the key in $data
      */
@@ -198,5 +197,33 @@ class Forms {
     }
     public function isValid(){
         return count($this->errors, COUNT_RECURSIVE) - count($this->errors) == 0;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMethod() {
+        return $this->method;
+    }
+
+    /**
+     * @param string $method
+     */
+    public function setMethod($method) {
+        $this->method = $method;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUrl() {
+        return $this->url;
+    }
+
+    /**
+     * @param string $url
+     */
+    public function setUrl($url) {
+        $this->url = $url;
     }
 }
