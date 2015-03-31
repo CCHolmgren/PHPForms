@@ -6,7 +6,7 @@
  * Time: 13:47
  */
 namespace PHPForms\Fields;
-trait FieldContainer {
+trait FieldContainer{
     protected $fields = array();
     protected $fieldNames = array();
 

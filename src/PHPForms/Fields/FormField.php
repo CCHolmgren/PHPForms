@@ -48,7 +48,7 @@ class FormField {
     protected $shouldRender = true;
 
     /**
-     * Whether this field is selfclosing (<input>) or not (<button></button>)
+     * Whether this field is self closing (<input>) or not (<button></button>)
      * @var bool
      */
     protected $selfClosing = true;
@@ -73,7 +73,23 @@ class FormField {
         $this->value = $this->options['value'];
         $this->validators = $validators;
     }
+    protected function getLabel(){
+        if(isset($this->options['label']['wrap']) && isset($this->options['label']['value'])){
+            return "<label>{$this->options['label']['value']}";
 
+        } else if(isset($this->options['label']) && isset($this->options['label']['value'])) {
+            return "<label for='{$this->options['label']['for']}'>{$this->options['label']['value']}</label>";
+        } else {
+            return "";
+        }
+    }
+    protected function getLabelStop(){
+        if(isset($this->options['label']['wrap'])){
+            return "</label>";
+        } else {
+            return "";
+        }
+    }
     /**
      * Renders a field with all options and attributes given by this class
      * This is a generic renderField method
@@ -82,6 +98,7 @@ class FormField {
      */
     protected function renderField(){
         $result = "";
+        $result .= $this->getLabel();
         $result .= "<{$this->tag}";
         if($this->type !== ""){
             $result .= " type='{$this->type}'";
@@ -110,6 +127,7 @@ class FormField {
             $result .= $this->value;
             $result .= "</{$this->tag}>";
         }
+        $result .= $this->getLabelStop();
         return  $result;
     }
 

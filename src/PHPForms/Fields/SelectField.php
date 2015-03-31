@@ -2,14 +2,14 @@
 /**
  * Created by PhpStorm.
  * User: Chrille
- * Date: 2015-03-30
- * Time: 13:46
+ * Date: 2015-03-31
+ * Time: 10:14
  */
 
 namespace PHPForms\Fields;
 
 
-class FieldsetField extends FieldContainerField {
-    protected $tag = "fieldset";
+class SelectField extends FieldContainerField{
     protected $selfClosing = false;
+    protected $tag = 'select';
 } 
