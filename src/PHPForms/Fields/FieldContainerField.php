@@ -11,6 +11,7 @@ namespace PHPForms\Fields;
 
 class FieldContainerField extends FormField implements \Iterator{
     use FieldContainer;
+    protected $selfClosing = false;
 
     function rewind() {
         return reset($this->fields);

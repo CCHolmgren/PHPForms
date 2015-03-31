@@ -10,6 +10,5 @@ namespace PHPForms\Fields;
 
 
 class SelectField extends FieldContainerField{
-    protected $selfClosing = false;
     protected $tag = 'select';
 } 

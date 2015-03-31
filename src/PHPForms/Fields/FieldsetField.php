@@ -11,5 +11,4 @@ namespace PHPForms\Fields;
 
 class FieldsetField extends FieldContainerField {
     protected $tag = "fieldset";
-    protected $selfClosing = false;
 } 
