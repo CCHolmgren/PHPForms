@@ -67,5 +67,6 @@ trait FieldContainer{
             echo "Class did not exist";
             $this->fields[] = new FormField($name, $type, $options, $validators);
         }
+        return $this;
     }
 }

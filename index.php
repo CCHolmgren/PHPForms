@@ -26,6 +26,7 @@ use PHPForms\Fields\ButtonField;
 use PHPForms\Fields\ButtonButtonField;
 use PHPForms\Fields\PasswordField;
 use PHPForms\Fields\TextareaField;
+use PHPForms\Forms\Forms;
 use PHPForms\Validators\Validator;
 use PHPForms\Fields\LegendField;
 
@@ -35,6 +36,19 @@ class ValidatorYes implements Validator{
         return "This is not right!";
     }
 }
+
+class PostForm extends Forms {
+    public function buildForm()
+    {
+        $this
+            ->add('text', 'name', 'text')
+            ->add('textarea','lyrics', 'text')
+            ->add('checkbox', 'publish', 'checkbox');
+        return $this;
+    }
+}
+$x = new PostForm();
+echo $x->buildForm()->asDivs();
 $fieldset = new \PHPForms\Fields\FieldsetField();
 $fieldset->addField(new ButtonField('', 'button', ['value'=>'Empty click']));
 $fieldset->addField(new LegendField('', '', ['value'=>'Testing, testing']));
