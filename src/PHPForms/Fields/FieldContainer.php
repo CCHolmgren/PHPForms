@@ -56,6 +56,7 @@ trait FieldContainer{
      * @param $type string See $type on __construct on FormField
      * @param array $options See $options on __construct on FormField
      * @param array $validators See $validators on __construct on FormField
+     * @return $this
      */
     public function add($field, $name, $type, $options = [], $validators = []){
         $options = array_merge([], $options);

@@ -114,6 +114,7 @@ class FormField {
         $result .= " value='{$this->value}'";
         if(!empty($this->options['classes'])){
             $result .= " class='";
+            var_dump($this->options);
             foreach($this->options['classes'] as $value){
                 $result .= $value;
             }

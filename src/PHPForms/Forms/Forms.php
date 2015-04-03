@@ -118,12 +118,16 @@ class Forms{
     /**
      * @return string
      */
-    public function asDivs(){
+    public function asDivs($divClass = ""){
         $result = '<div>';
         foreach($this->fields as $field){
-            $result .= "<div>";
+            $result .= "<div";
+            if($divClass != ''){
+                $result .= " class='{$divClass}'";
+            }
+            $result .= '>';
             $result .= $field->render();
-            $result .= "</div>";
+            $result .= '</div>';
         }
         $result .= '</div>';
         return $this->formatForm($result);
