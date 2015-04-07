@@ -1,12 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Chrille
- * Date: 2015-03-30
- * Time: 13:47
- */
 namespace PHPForms\Fields;
-trait FieldContainer{
+trait FieldContainer {
     protected $fields = array();
     protected $fieldNames = array();
 
@@ -16,14 +10,15 @@ trait FieldContainer{
      * @return $this
      */
     public function addField(FormField $field) {
-        if($field->getName() == '' || !isset($this->fieldNames[$field->getName()])){
+        if ($field->getName() == '' || !isset($this->fieldNames[$field->getName()])) {
             $this->fields[] = $field;
-            if($field->getName() != ''){
+            if ($field->getName() != '') {
                 $this->fieldNames[$field->getName()] = $field;
             }
         } else {
             trigger_error("You cannot add a field with name: {$field->getName()}, since there has already been one added.");
         }
+
         return $this;
     }
 
@@ -34,6 +29,7 @@ trait FieldContainer{
     public function getFields() {
         return $this->fields;
     }
+
     /**
      * Specialized method for adding a submit button to the form
      * Won't place it at the bottom
@@ -41,7 +37,7 @@ trait FieldContainer{
      * @param array $options
      * @return $this
      */
-    public function addButton($value, array $options = []){
+    public function addButton($value, array $options = []) {
         $options = array_merge(['value' => $value], $options);
         $this->fields[] = new ButtonField('', 'submit', $options);
 
@@ -58,16 +54,17 @@ trait FieldContainer{
      * @param array $validators See $validators on __construct on FormField
      * @return $this
      */
-    public function add($field, $name, $type, $options = [], $validators = []){
+    public function add($field, $name, $type, $options = [], $validators = []) {
         $options = array_merge([], $options);
         $field = 'PHPForms\\Fields\\' . $field . 'Field';
-        if(class_exists($field)){
+        if (class_exists($field)) {
             echo "Class existed";
             $this->fields[] = new $field($name, $type, $options, $validators);
         } else {
             echo "Class did not exist";
             $this->fields[] = new FormField($name, $type, $options, $validators);
         }
+
         return $this;
     }
 }
