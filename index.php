@@ -118,8 +118,10 @@ if ($formbuilder->form->isValid()) {
 } else {
     echo "The form is not valid";
 }
-
-echo $formbuilder->form->asWrapped('song');
+$test = new FormBuilder();
+$test->addField(new TextareaField('test-name-what', '', []));
+$formbuilder->form->addNested($test->form, 'test');
+echo $formbuilder->form->asDivs();
 ?>
 </body>
 </html>

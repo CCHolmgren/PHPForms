@@ -190,12 +190,6 @@ class FormField {
         }
     }
 
-    public function renderWrapped($wrap) {
-        $result = $this->renderField($wrap . "[{$this->getName()}]");
-
-        return $result;
-    }
-
     /**
      * @return string
      */
@@ -205,8 +199,17 @@ class FormField {
 
     /**
      * @param string $name
+     * @return $this
      */
     public function setName($name) {
         $this->name = $name;
+        return $this;
+    }
+
+    public function setWrapped($wrap) {
+        if($this->name != ""){
+            $this->setName($wrap . "[$this->name]");
+        }
+        return $this;
     }
 }

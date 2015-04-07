@@ -1,5 +1,6 @@
 <?php
 namespace PHPForms\Fields;
+use PHPForms\Forms;
 trait FieldContainer {
     protected $fields = array();
     protected $fieldNames = array();
@@ -21,7 +22,12 @@ trait FieldContainer {
 
         return $this;
     }
-
+    public function addNested(Forms\Forms $form, $name){
+        $this->fields[] = $form;
+        $this->fieldNames[$name] = $form;
+        $form->setWrapped($name);
+        return $this;
+    }
     /**
      * Returns all fields that are added
      * @return array

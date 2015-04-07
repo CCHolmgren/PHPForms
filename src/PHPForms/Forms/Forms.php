@@ -140,14 +140,18 @@ class Forms {
         return $this->formatForm($result);
     }
 
-    public function asWrapped($wrap) {
-        $result = '';
+    /**
+     * This method will wrap all names of the fields with the $wrap value
+     * As such, it is a dangerous method that will change all names that are available
+     * @param $wrap
+     * @return $this
+     */
+    public function setWrapped($wrap) {
         /** @var FormField $field */
         foreach ($this->fields as $field) {
-            $result .= $field->renderWrapped($wrap);
+            $field->setWrapped($wrap);
         }
-
-        return $result;
+        return $this;
     }
 
     public function getErrors() {
@@ -189,5 +193,12 @@ class Forms {
      */
     public function setUrl($url) {
         $this->url = $url;
+    }
+    public function render(){
+        $result = '';
+        foreach ($this->fields as $field) {
+            $result .= $field->render();
+        }
+        return $result;
     }
 }
