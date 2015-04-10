@@ -127,13 +127,17 @@ class Forms {
     public function asDivs($divClass = "") {
         $result = '<div>';
         foreach ($this->fields as $field) {
-            $result .= "<div";
-            if ($divClass != '') {
-                $result .= " class='{$divClass}'";
+            if($field instanceof FieldContainer){
+                $result .= $field->render();
+            } else {
+                $result .= "<div";
+                if ($divClass != '') {
+                    $result .= " class='{$divClass}'";
+                }
+                $result .= '>';
+                $result .= $field->render();
+                $result .= '</div>';
             }
-            $result .= '>';
-            $result .= $field->render();
-            $result .= '</div>';
         }
         $result .= '</div>';
 
@@ -197,7 +201,9 @@ class Forms {
     public function render(){
         $result = '';
         foreach ($this->fields as $field) {
+            $result .= '<div>';
             $result .= $field->render();
+            $result .= '</div>';
         }
         return $result;
     }
