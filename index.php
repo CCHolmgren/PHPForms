@@ -6,6 +6,8 @@
 </head>
 <body>
 <?php
+require 'vendor/autoload.php';
+
 use PHPForms\Fields\ButtonButtonField;
 use PHPForms\Fields\ButtonField;
 use PHPForms\Fields\FormField;
@@ -15,15 +17,6 @@ use PHPForms\Fields\TextareaField;
 use PHPForms\Forms\FormBuilder;
 use PHPForms\Forms\Forms;
 use PHPForms\Validators\Validator;
-
-define('__SITEROOT__', realpath(dirname(__FILE__)));
-function __autoload($name) {
-    $path = __SITEROOT__ . '/src/' . $name . '.php';
-    if (file_exists($path)) {
-        require_once $path;
-    }
-
-}
 
 /*
  * A simple class-based validator that implements the Validator interface
