@@ -1,5 +1,5 @@
 {
-    "name": "Ravengenocide/PHPForms",
+    "name": "ravengenocide/php-forms",
     "description": "A simple PHP form builder for PHP 5.4+",
     "require": {
         "php": ">=5.4.0"
