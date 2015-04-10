@@ -50,6 +50,8 @@ class PostForm extends Forms {
 $x = new PostForm();
 echo $x->buildForm()->asDivs('form-group');
 
+echo "<hr>";
+
 $fieldset = new \PHPForms\Fields\FieldsetField();
 $fieldset->addField(new ButtonField('', 'button', ['value' => 'Empty click']));
 $fieldset->addField(new LegendField('', '', ['value' => 'Testing, testing']));
@@ -70,9 +72,7 @@ $formbuilder->addField(
         new \PHPForms\Validators\MaxValueValidator(5, "Value must be at most 5."),
         new \PHPForms\Validators\RegexValidator('/3/', "Must not be 3", true),
         new \PHPForms\Validators\RegexValidator('/2/', "Must be 2", false),
-        function ($value) {
-            return "No can do!";
-        }]))
+        ]))
         // A lot of validators. Displaying Classbased validation and also method validation. This of course works if you pass a string to a method as well
             ->addButton('Submit',
                         ['onclick' => 'alert("test")', 'style' => 'border:10px solid black;'])// A button added by the helper addButton, this will always create a submit button. Displaying setting onclick of the button, and also style
@@ -92,6 +92,7 @@ $formbuilder->addField(
             ->addField($fieldset); // Adding a fieldset, that is already created
 
 echo $formbuilder->form->asParagraph();
+echo "<hr>";
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $formbuilder->addData($_POST);
@@ -101,8 +102,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 echo $formbuilder->form->asUnorderedList();
 
+echo "<hr>";
+
 $formbuilder->form->setMethod('POST');
 echo $formbuilder->form->asTable();
+
+echo "<hr>";
 
 var_dump($formbuilder->form->getErrors());
 
@@ -112,9 +117,13 @@ if ($formbuilder->form->isValid()) {
     echo "The form is not valid";
 }
 $test = new FormBuilder();
+
 $test->addField(new TextareaField('test-name-what', '', []));
 $formbuilder->form->addNested($test->form, 'test');
+
 echo $formbuilder->form->asDivs();
+
+echo "<hr>";
 ?>
 </body>
 </html>

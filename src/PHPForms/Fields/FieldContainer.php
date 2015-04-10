@@ -35,7 +35,13 @@ trait FieldContainer {
     public function getFields() {
         return $this->fields;
     }
-
+    public function getValues(){
+        $result = [];
+        foreach($this->fieldNames as $name=>$field){
+            $result[$name] = $field->getValue();
+        }
+        return $result;
+    }
     /**
      * Specialized method for adding a submit button to the form
      * Won't place it at the bottom

@@ -53,6 +53,7 @@ class FormField {
      */
     protected $value;
     protected $errors = array();
+    protected $isValid = null;
 
     public function __construct($name = '', $type = '', array $options = [], array $validators = []) {
         $this->name = $name;
@@ -109,29 +110,27 @@ class FormField {
     protected function getOpeningTag($wrappedName = "") {
         $result = "";
         $result .= "<{$this->tag}";
-        if ($this->type !== "") {
+        if (!empty($this->type)) {
             $result .= " type='{$this->type}'";
         }
-        if ($wrappedName !== "" && $this->name !== "") {
+        if (!empty($wrappedName) && !empty($this->name)) {
             $result .= " name='{$wrappedName}'";
-        } else if ($this->name !== "") {
+        } else if (!empty($this->name)) {
             $result .= " name='{$this->name}'";
+        }
+        if($this->selfClosing){
+            $result .= " value='{$this->value}'";
+        }
+        if (!empty($this->options['classes'])) {
+            $result .= "class='" . implode(" ", $this->options['classes']) . "'";
+        }
+        if (!empty($this->options['style'])) {
+            $result .= " style='{$this->options['style']}'";
         }
         if (!empty($this->options['attributes'])) {
             foreach ($this->options['attributes'] as $key => $value) {
-                $result .= " $key='$value' ";
+                $result .= " {$key}='{$value}' ";
             }
-        }
-        $result .= " value='{$this->value}'";
-        if (!empty($this->options['classes'])) {
-            $result .= " class='";
-            foreach ($this->options['classes'] as $value) {
-                $result .= $value;
-            }
-            $result .= "'";
-        }
-        if (isset($this->options['style'])) {
-            $result .= " style='{$this->options['style']}'";
         }
         $result .= ">";
 
@@ -176,7 +175,6 @@ class FormField {
      */
     public function validate() {
         if (isset($this->validators)) {
-            /** @var $validator */
             foreach ($this->validators as $validator) {
                 if ($validator instanceof Validator) {
                     $result = $validator->validate($this->value);
@@ -186,6 +184,11 @@ class FormField {
                 if ($result !== null) {
                     $this->errors[] = $result;
                 }
+            }
+            if(count($this->errors)){
+                $this->isValid = true;
+            } else {
+                $this->isValid = false;
             }
         }
     }
