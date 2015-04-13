@@ -67,12 +67,12 @@ $formbuilder = new FormBuilder();
 // Attributes are placed under $options['attributes'] and css - classes $options['classes']
 
 $formbuilder->addField(
-    new FormField('test', 'number', ['value' => "Test"], [
+    new FormField('test', 'number', ['value' => "Test", 'validators' => [
         new \PHPForms\Validators\ValueRangeValidator(1, 3, "Value must be between 1 and 3"),
         new \PHPForms\Validators\MaxValueValidator(5, "Value must be at most 5."),
         new \PHPForms\Validators\RegexValidator('/3/', "Must not be 3", true),
         new \PHPForms\Validators\RegexValidator('/2/', "Must be 2", false),
-        ]))
+    ]]))
         // A lot of validators. Displaying Classbased validation and also method validation. This of course works if you pass a string to a method as well
             ->addButton('Submit',
                         ['onclick' => 'alert("test")', 'style' => 'border:10px solid black;'])// A button added by the helper addButton, this will always create a submit button. Displaying setting onclick of the button, and also style

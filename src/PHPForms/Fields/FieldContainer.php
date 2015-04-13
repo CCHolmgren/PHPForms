@@ -35,6 +35,9 @@ trait FieldContainer {
     public function getFields() {
         return $this->fields;
     }
+    public function getFieldNames(){
+        return $this->fieldNames;
+    }
     public function getValues(){
         $result = [];
         foreach($this->fieldNames as $name=>$field){
@@ -63,18 +66,17 @@ trait FieldContainer {
      * @param $name string See $name on __construct on FormField
      * @param $type string See $type on __construct on FormField
      * @param array $options See $options on __construct on FormField
-     * @param array $validators See $validators on __construct on FormField
      * @return $this
      */
-    public function add($field, $name, $type, $options = [], $validators = []) {
+    public function add($field, $name, $type, $options = []) {
         $options = array_merge([], $options);
         $field = 'PHPForms\\Fields\\' . $field . 'Field';
         if (class_exists($field)) {
             echo "Class existed";
-            $this->fields[] = new $field($name, $type, $options, $validators);
+            $this->fields[] = new $field($name, $type, $options);
         } else {
             echo "Class did not exist";
-            $this->fields[] = new FormField($name, $type, $options, $validators);
+            $this->fields[] = new FormField($name, $type, $options);
         }
 
         return $this;

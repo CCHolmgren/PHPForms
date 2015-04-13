@@ -55,12 +55,12 @@ class FormField {
     protected $errors = array();
     protected $isValid = null;
 
-    public function __construct($name = '', $type = '', array $options = [], array $validators = []) {
+    public function __construct($name = '', $type = '', array $options = []) {
         $this->name = $name;
         $this->type = $type;
-        $this->options = array_merge(['value' => null, 'attributes' => [], 'classes' => []], $options);
+        $this->options = array_merge(['value' => null, 'attributes' => [], 'classes' => [], 'validators' => []], $options);
         $this->value = $this->options['value'];
-        $this->validators = $validators;
+        $this->validators = $this->options['validators'];
     }
 
     /**
@@ -83,7 +83,7 @@ class FormField {
      * and it can be overloaded to provide more finegrained control over the field
      * @return string
      */
-    protected function renderField($wrappedName = "") {
+    protected function renderField($wrappedName = "", $showErrors = true) {
         $result = "";
         $result .= $this->getLabel();
         $result .= $this->getOpeningTag($wrappedName);
@@ -92,6 +92,12 @@ class FormField {
             $result .= $this->getClosingTag();
         }
         $result .= $this->getLabelStop();
+        if($showErrors){
+            foreach($this->errors as $value){
+                $result .= '<span>' . $value . '</span>';
+            }
+        }
+
 
         return $result;
     }
@@ -210,9 +216,12 @@ class FormField {
     }
 
     public function setWrapped($wrap) {
-        if($this->name != ""){
+        if(!empty($this->name)){
             $this->setName($wrap . "[$this->name]");
         }
         return $this;
+    }
+    public function toString(){
+        return $this->renderField("", false);
     }
 }
