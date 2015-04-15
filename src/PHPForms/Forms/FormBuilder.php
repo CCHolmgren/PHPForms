@@ -9,8 +9,8 @@ class FormBuilder {
         $this->form = new Forms($method, $url, $attributes);
     }
 
-    public function add($field, $name, $type, $options = [], $validators = []) {
-        $this->form->add($field, $name, $type, $options, $validators);
+    public function add($field, $name = '', $options = []) {
+        $this->form->add($field, $name, $options);
 
         return $this;
     }

@@ -40,8 +40,12 @@ trait FieldContainer {
     }
     public function getValues(){
         $result = [];
-        foreach($this->fieldNames as $name=>$field){
-            $result[$name] = $field->getValue();
+        foreach($this->fields as $field){
+            if(array_search($field->getName(), $result)){
+                $result[] = $field->getValue();
+            } else {
+                $result[$field->getName()] = $field->getValue();
+            }
         }
         return $result;
     }
@@ -68,15 +72,13 @@ trait FieldContainer {
      * @param array $options See $options on __construct on FormField
      * @return $this
      */
-    public function add($field, $name, $type, $options = []) {
+    public function add($field, $name = '', array $options = []) {
         $options = array_merge([], $options);
-        $field = 'PHPForms\\Fields\\' . $field . 'Field';
-        if (class_exists($field)) {
-            echo "Class existed";
-            $this->fields[] = new $field($name, $type, $options);
+        $new_field = 'PHPForms\\Fields\\' . $field . 'Field';
+        if (class_exists($new_field)) {
+            $this->fields[] = new $new_field($name, $field, $options);
         } else {
-            echo "Class did not exist";
-            $this->fields[] = new FormField($name, $type, $options);
+            $this->fields[] = new FormField($name, $field, $options);
         }
 
         return $this;

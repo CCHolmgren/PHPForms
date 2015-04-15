@@ -38,10 +38,10 @@ class ValidatorYes implements Validator {
 class PostForm extends Forms {
     public function buildForm() {
         $this
-            ->add('text', 'name', 'text', ['classes' => ['form-control']])
-            ->add('textarea', 'lyrics', 'text')
-            ->add('checkbox', 'publish', 'checkbox')
-            ->add('button', '', 'submit', ['value' => 'Submit']);
+            ->add('text', 'name', ['classes' => ['form-control']])
+            ->add('textarea', 'lyrics')
+            ->add('checkbox', 'publish')
+            ->addButton('Submit');
 
         return $this;
     }
@@ -81,9 +81,8 @@ $formbuilder->addField(
             ->addField(new ButtonButtonField('', '', ['value' => 'Hello there']))
             ->addField(new PasswordField('password'))
             ->addField(new ButtonField('', 'submit', ['value' => 'Another one']))
-            ->add('Button', '', '')// Generic add method. This tries to create a field with the class ButtonField
-            ->add('Password', '',
-                  '')// Generic add method. This tries to create a field with the class PasswordField, name = '', and type = '' since it doesn't care about type
+            ->add('Button')// Generic add method. This tries to create a field with the class ButtonField
+            ->add('Password', 'password_one_two_three')// Generic add method. This tries to create a field with the class PasswordField, name = '', and type = '' since it doesn't care about type
             ->addField(new TextareaField('test-name', '',
                                          ['value' => 'Hello the textarea']))// Textarea with name test-name, and the type doesn't matter. The text that will be in the textarea is given by 'value'=>'Hello the textarea'
             ->addField(new FormField('someothername',
@@ -118,12 +117,26 @@ if ($formbuilder->form->isValid()) {
 }
 $test = new FormBuilder();
 
-$test->addField(new TextareaField('test-name-what', '', []));
+$test->addField(new TextareaField('test-name-what'));
 $formbuilder->form->addNested($test->form, 'test');
 
 echo $formbuilder->form->asDivs();
 
 echo "<hr>";
+
+$login_form = new Forms();
+$login_form->add('text', 'username')
+->add('password', 'password')
+->addButton('Submit');
+echo $login_form->asDivs();
+
+$register_form = new Forms();
+$register_form->add('text', 'username', ['label'=>['value'=>'Username', 'for'=>'username']])
+->add('password', 'password', ['label'=>['value'=>'Password', 'for'=>'password']])
+->add('password', 'password_confirmation', ['label'=>['value'=>'Confirm password', 'for'=>'password_confirmation']])
+->add('email', 'email', ['label'=>['value'=>'Email', 'for'=>'email']])
+->addButton('Submit');
+echo $register_form->asDivs('form-group');
 ?>
 </body>
 </html>
