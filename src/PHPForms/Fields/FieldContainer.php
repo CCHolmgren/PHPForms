@@ -76,9 +76,11 @@ trait FieldContainer {
         $options = array_merge([], $options);
         $new_field = 'PHPForms\\Fields\\' . $field . 'Field';
         if (class_exists($new_field)) {
-            $this->fields[] = new $new_field($name, $field, $options);
+            $this->addField(new $new_field($name, $field, $options));
+            //$this->fields[] = ;
         } else {
-            $this->fields[] = new FormField($name, $field, $options);
+            $this->addField(new FormField($name, $field, $options));
+            //$this->fields[] = new FormField($name, $field, $options);
         }
 
         return $this;
