@@ -53,8 +53,8 @@ echo $x->buildForm()->asDivs('form-group');
 echo "<hr>";
 
 $fieldset = new \PHPForms\Fields\FieldsetField();
-$fieldset->addField(new ButtonField('', 'button', ['value' => 'Empty click']));
 $fieldset->addField(new LegendField('', '', ['value' => 'Testing, testing']));
+$fieldset->addField(new ButtonField('', 'button', ['value' => 'Empty click']));
 
 $select = new \PHPForms\Fields\SelectField();
 $select->addField(new \PHPForms\Fields\OptionField('', '', ['value' => '1', 'text' => 'My text']));
@@ -67,7 +67,7 @@ $formbuilder = new FormBuilder();
 // Attributes are placed under $options['attributes'] and css - classes $options['classes']
 
 $formbuilder->addField(
-    new FormField('test', 'number', ['value' => "Test", 'validators' => [
+    new FormField('test', 'number', ['value' => "4", 'validators' => [
         new \PHPForms\Validators\ValueRangeValidator(1, 3, "Value must be between 1 and 3"),
         new \PHPForms\Validators\MaxValueValidator(5, "Value must be at most 5."),
         new \PHPForms\Validators\RegexValidator('/3/', "Must not be 3", true),
@@ -135,8 +135,12 @@ $register_form->add('text', 'username', ['label'=>['value'=>'Username', 'for'=>'
 ->add('password', 'password', ['label'=>['value'=>'Password', 'for'=>'password']])
 ->add('password', 'password_confirmation', ['label'=>['value'=>'Confirm password', 'for'=>'password_confirmation']])
 ->add('email', 'email', ['label'=>['value'=>'Email', 'for'=>'email']])
+    ->addElement(new \PHPForms\Elements\ParagraphElement(['content'=>'What is your name?']))
+    ->add('text', 'name-question', ['label'=>['value'=>'Name'], 'id'=>'name-question'])
 ->addButton('Submit');
 echo $register_form->asDivs('form-group');
+
+
 ?>
 </body>
 </html>

@@ -1,12 +1,18 @@
 <?php namespace PHPForms\Fields;
 
+use PHPForms\Elements\HTMLElement;
 use PHPForms\Validators\Validator;
 
-class FormField {
+class FormField extends HTMLElement{
     /**
      * @var array PHPForms\Validators\Validator
      */
     public $validators = array();
+    /**
+     * Override the inherited $tag
+     * @var string
+     */
+    protected $tag = 'input';
     /**
      * Name of the field
      * Used in <input name='$name'>
@@ -20,29 +26,8 @@ class FormField {
      */
     protected $type;
     /**
-     * Options, or attrbiutes of the field
-     * Can be anything that you want. onclick, id, min, max, pattern or anything else
-     * @var array
-     */
-    protected $options;
-    /**
-     * Whether the field has been rendered yet
-     * @var bool
-     */
-    protected $rendered = false;
-    /**
-     * Tag or element name, such as input, button, textarea, or anything else
-     * Used in <$tag>[</$tag>]
-     * @var string
-     */
-    protected $tag = 'input';
-    /**
-     * Whether this field should render or be skipped
-     * @var bool
-     */
-    protected $shouldRender = true;
-    /**
-     * Whether this field is self closing (<input>) or not (<button></button>)
+     * Override the inherited $selfClosing
+     * input is selfClosing, so it should be true here
      * @var bool
      */
     protected $selfClosing = true;
@@ -57,24 +42,16 @@ class FormField {
 
     public function __construct($name = '', $type = '', array $options = []) {
         $this->name = $name;
-        $this->type = $type;
-        $this->options = array_merge(['value' => null, 'attributes' => [], 'classes' => [], 'validators' => []], $options);
+        $this->setType($type);
+        $this->options = array_merge(['value' => null, 'attributes' => [], 'classes' => [], 'validators' => [], 'id' => ''], $options);
         $this->value = $this->options['value'];
         $this->validators = $this->options['validators'];
-    }
 
-    /**
-     * Renders this field, if it should be rendered
-     * @return string
-     */
-    public function render() {
-        if ($this->shouldRender) {
-            $this->rendered = true;
-
-            return $this->renderField();
+        // Only try to set the id to the name, if there is an id or a name, otherwise it doesn't make much sense
+        if(!empty($this->name) || !empty($this->options['id'])){
+            $id = !empty($this->options['id']) ? $this->options['id']: $this->name;
+            $this->setId($id);
         }
-
-        return "";
     }
 
     /**
@@ -83,7 +60,7 @@ class FormField {
      * and it can be overloaded to provide more finegrained control over the field
      * @return string
      */
-    protected function renderField($wrappedName = "", $showErrors = true) {
+    protected function renderElement($wrappedName = "", $showErrors = true) {
         $result = "";
         $result .= $this->getLabel();
         $result .= $this->getOpeningTag($wrappedName);
@@ -105,9 +82,13 @@ class FormField {
     protected function getLabel() {
         if (isset($this->options['label']['wrap']) && isset($this->options['label']['value'])) {
             return "<label>{$this->options['label']['value']}";
-
-        } else if (isset($this->options['label']) && isset($this->options['label']['value'])) {
-            return "<label for='{$this->options['label']['for']}'>{$this->options['label']['value']}</label>";
+        } else if (isset($this->options['label']['value'])) {
+            if(isset($this->options['label']['for'])){
+                $for = $this->options['label']['for'];
+            } else {
+                $for = $this->getId();
+            }
+            return "<label for='{$for}'>{$this->options['label']['value']}</label>";
         } else {
             return "";
         }
@@ -128,7 +109,7 @@ class FormField {
             $result .= " value='{$this->value}'";
         }
         if (!empty($this->options['classes'])) {
-            $result .= "class='" . implode(" ", $this->options['classes']) . "'";
+            $result .= " class='" . implode(" ", $this->options['classes']) . "'";
         }
         if (!empty($this->options['style'])) {
             $result .= " style='{$this->options['style']}'";
@@ -137,6 +118,10 @@ class FormField {
             foreach ($this->options['attributes'] as $key => $value) {
                 $result .= " {$key}='{$value}' ";
             }
+        }
+        $id = $this->getId();
+        if(!empty($id)){
+            $result .= " id='{$id}'";
         }
         $result .= ">";
 
@@ -222,6 +207,20 @@ class FormField {
         return $this;
     }
     public function toString(){
-        return $this->renderField("", false);
+        return $this->renderElement("", false);
+    }
+
+    /**
+     * @return string
+     */
+    public function getType() {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     */
+    public function setType($type) {
+        $this->type = $type;
     }
 }

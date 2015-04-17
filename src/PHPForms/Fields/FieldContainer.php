@@ -1,6 +1,9 @@
 <?php
 namespace PHPForms\Fields;
+
+use PHPForms\Elements\HTMLElement;
 use PHPForms\Forms;
+
 trait FieldContainer {
     protected $fields = array();
     protected $fieldNames = array();
@@ -22,6 +25,10 @@ trait FieldContainer {
 
         return $this;
     }
+    public function addElement(HTMLElement $element){
+        $this->fields[] = $element;
+        return $this;
+    }
     public function addNested(Forms\Forms $form, $name){
         $this->fields[] = $form;
         $this->fieldNames[$name] = $form;
@@ -29,7 +36,8 @@ trait FieldContainer {
         return $this;
     }
     /**
-     * Returns all fields that are added
+     * Returns all fields that have been added
+     * Includes non formfield elements as well
      * @return array
      */
     public function getFields() {
@@ -41,10 +49,12 @@ trait FieldContainer {
     public function getValues(){
         $result = [];
         foreach($this->fields as $field){
-            if(array_search($field->getName(), $result)){
-                $result[] = $field->getValue();
-            } else {
-                $result[$field->getName()] = $field->getValue();
+            if($field instanceof FormField){
+                if(array_search($field->getName(), $result)){
+                    $result[] = $field->getValue();
+                } else {
+                    $result[$field->getName()] = $field->getValue();
+                }
             }
         }
         return $result;
@@ -58,7 +68,7 @@ trait FieldContainer {
      */
     public function addButton($value, array $options = []) {
         $options = array_merge(['value' => $value], $options);
-        $this->fields[] = new ButtonField('', 'submit', $options);
+        $this->addField(new ButtonField('', 'submit', $options));
 
         return $this;
     }
@@ -68,7 +78,6 @@ trait FieldContainer {
      * If the specialized class exists, it is assume to take the same arguments as FormField does
      * @param $field string Name of the class, and file, that should be created
      * @param $name string See $name on __construct on FormField
-     * @param $type string See $type on __construct on FormField
      * @param array $options See $options on __construct on FormField
      * @return $this
      */
@@ -77,10 +86,8 @@ trait FieldContainer {
         $new_field = 'PHPForms\\Fields\\' . $field . 'Field';
         if (class_exists($new_field)) {
             $this->addField(new $new_field($name, $field, $options));
-            //$this->fields[] = ;
         } else {
             $this->addField(new FormField($name, $field, $options));
-            //$this->fields[] = new FormField($name, $field, $options);
         }
 
         return $this;

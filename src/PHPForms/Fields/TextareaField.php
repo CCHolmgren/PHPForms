@@ -3,4 +3,8 @@ class TextareaField extends FormField {
     protected $tag = 'textarea';
 
     protected $selfClosing = false;
+
+    public function setType($type){
+        //
+    }
 }

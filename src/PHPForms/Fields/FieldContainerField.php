@@ -34,7 +34,7 @@ class FieldContainerField extends FormField implements \Iterator {
         return key($this->fields) !== null;
     }
 
-    protected function renderField($wrappedName = "", $showErrors = true) {
+    protected function renderElement($wrappedName = "", $showErrors = true) {
         $result = "";
         $result .= $this->getOpeningTag($wrappedName);
 
