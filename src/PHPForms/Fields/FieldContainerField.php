@@ -20,8 +20,6 @@ class FieldContainerField extends FormField implements \Iterator {
         return current($this->fields);
     }
 
-    /* Iterator */
-
     function key() {
         return key($this->fields);
     }
@@ -53,5 +51,4 @@ class FieldContainerField extends FormField implements \Iterator {
 
         return $result;
     }
-    /* Iterator */
 } 

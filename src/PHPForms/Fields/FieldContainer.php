@@ -14,13 +14,14 @@ trait FieldContainer {
      * @return $this
      */
     public function addField(FormField $field) {
-        if ($field->getName() == '' || !isset($this->fieldNames[$field->getName()])) {
+        $name = $field->getName();
+        if ($name == '' || !isset($this->fieldNames[$name])) {
             $this->fields[] = $field;
-            if ($field->getName() != '') {
-                $this->fieldNames[$field->getName()] = $field;
+            if ($name != '') {
+                $this->fieldNames[$name] = $field;
             }
         } else {
-            trigger_error("You cannot add a field with name: {$field->getName()}, since there has already been one added.");
+            trigger_error("You cannot add a field with name: {$name}, since there has already been one added.");
         }
 
         return $this;
@@ -50,10 +51,11 @@ trait FieldContainer {
         $result = [];
         foreach($this->fields as $field){
             if($field instanceof FormField){
-                if(array_search($field->getName(), $result)){
+                $name = $field->getName();
+                if(array_search($name, $result)){
                     $result[] = $field->getValue();
                 } else {
-                    $result[$field->getName()] = $field->getValue();
+                    $result[$name] = $field->getValue();
                 }
             }
         }

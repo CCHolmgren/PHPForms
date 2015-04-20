@@ -1,8 +1,18 @@
 # PHPForms
 Form Builder for PHP 5.4+
 
-
 A simple validator that implements the Validator interface.
+
+### Intended features 
+1. Copy Laravel-form-builder.
+2. Allow for Django-like outputting, such as to_p, to_ul, (to_table). 
+3. Allow for same kind of creation of objects as Django, where the post data is unputted intoa newly created form and it allows you to render again, or if validation succeeded, continue.
+
+
+## Validation
+#### Class-based validator
+Validators implement the Validator interface, and implement the validate($value) function. 
+Validators either return null, for successful validation, or an error message if the validation failed.
 ```php
 /*
  * A simple class-based validator that implements the Validator interface
@@ -10,19 +20,50 @@ A simple validator that implements the Validator interface.
  */
 class ValidatorYes implements Validator{
     public function validate($value){
-        echo "Validate called with some odd value:  $value";
         return "This is not right!";
     }
 }
 ```
-This could also be done just by doing:
+
+#### Validator function
+If you do not need the complexity of class-based validators you can just pass in a function that takes a value, and returns either null or an error message.
 ```php
+/*
+ * This method will always fail the validation since it only returns a string
+ */
 function ValidatorYes($value){
-    echo "Validate called with some odd value:  $value";
     return "This is not right!";
 }
 ```
 
+#### Class-based validator that takes values in creation
+To see an example of a more complex validator we can just look at the RegexValidator that PHPForms provides.
+```php
+class RegexValidator implements Validator {
+    protected $regex;
+    protected $message;
+    protected $inverse_match;
+
+    public function __construct($regex = "", $message = "", $inverse_match = false) {
+        $this->regex = $regex;
+        $this->message = $message;
+        $this->inverse_match = $inverse_match;
+    }
+
+    public function validate($value) {
+        if (!$this->inverse_match == preg_match($this->regex, $value)) {
+            return null;
+        } else {
+            return $this->message;
+        }
+    }
+}
+```
+
+To use RegexValidator you do ```new RegexValidator('/^$/', 'This is my message if the validator failed', false)``` and pass it along when you create a form field.
+
+## Building forms
+#### Laravel Form Builder style of building forms
 Doing it like Laravel Form Builder does it, but without the helper:
 ```php
 /*
@@ -43,6 +84,8 @@ $x = new PostForm();
 echo $x->buildForm()->asDivs('form-group'); // This wraps the inputs in divs with the class form-group on them
 ```
 
+
+#### Complex forms
 A large example displaying many of the different ways to do stuff, validators, addField, add, addButton methods, fieldsets and so on.
 ```php
 $formbuilder = new FormBuilder();
@@ -79,7 +122,10 @@ $formbuilder->addField(
 echo $formbuilder->form->asParagraph();
 ```
 
-You can output the same form as many times as you want. You can also change the method and then output it again, without any problem.
+
+## Formatting
+#### Basic output formatting
+You can output the same form as many times as you want.
 ```php
 echo $formbuilder->form->asDivs();
 
@@ -87,11 +133,20 @@ echo $formbuilder->form->asParagraph();
 
 echo $formbuilder->form->asUnorderedList();
 
-$formbuilder->form->setMethod('POST');
 echo $formbuilder->form->asTable();
 ```
 
-Adding data to the form is as easy as just calling addData with either $_POST or $_GET. You can of course do it any way, addData just expects an associative array.
+## Extra
+#### Changing method
+You can also change the method and then output it again, without any problem.
+```php
+$formbuilder->form->setMethod('POST');
+
+echo $formbuilder->form->asDivs();
+```
+
+#### Adding data
+Adding data to the form is as easy as just calling addData with either $_POST or $_GET. Of course you can do it with any kind of data, addData just expects an associative array.
 ```php
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
     $formbuilder->addData($_POST);

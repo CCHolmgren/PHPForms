@@ -58,6 +58,8 @@ class FormField extends HTMLElement{
      * Renders a field with all options and attributes given by this class
      * This is a generic renderField method
      * and it can be overloaded to provide more finegrained control over the field
+     * @param string $wrappedName
+     * @param bool $showErrors
      * @return string
      */
     protected function renderElement($wrappedName = "", $showErrors = true) {

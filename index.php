@@ -6,6 +6,8 @@
 </head>
 <body>
 <?php
+
+// Version 0.3.0
 require 'vendor/autoload.php';
 
 use PHPForms\Fields\ButtonButtonField;
@@ -132,9 +134,9 @@ echo $login_form->asDivs();
 
 $register_form = new Forms();
 $register_form->add('text', 'username', ['label'=>['value'=>'Username', 'for'=>'username']])
-->add('password', 'password', ['label'=>['value'=>'Password', 'for'=>'password']])
-->add('password', 'password_confirmation', ['label'=>['value'=>'Confirm password', 'for'=>'password_confirmation']])
-->add('email', 'email', ['label'=>['value'=>'Email', 'for'=>'email']])
+->add('password', 'password', ['label'=>['value'=>'Password'], 'attributes'=>['placeholder'=>'Password']])
+->add('password', 'password_confirmation', ['label'=>['value'=>'Confirm password'], 'attributes'=>['placeholder'=>'Repeated password']])
+->add('email', 'email', ['label'=>['value'=>'Email']])
     ->addElement(new \PHPForms\Elements\ParagraphElement(['content'=>'What is your name?']))
     ->add('text', 'name-question', ['label'=>['value'=>'Name'], 'id'=>'name-question'])
 ->addButton('Submit');
