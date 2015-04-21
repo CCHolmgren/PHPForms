@@ -7,6 +7,7 @@ use PHPForms\Forms;
 trait FieldContainer {
     protected $fields = array();
     protected $fieldNames = array();
+    protected $errors = array();
 
     /**
      * Adds a FormField to this Form
@@ -93,5 +94,52 @@ trait FieldContainer {
         }
 
         return $this;
+    }
+
+    /**
+     * Takes data, given field names, adds it to the field and validates it
+     * Maybe it should be the other way around? (validate($data)?)
+     * $data comes in the form [$fieldname => $valuetoaddtothatfield[, ...]]
+     * TODO: Change the order, so that validate happens first
+     * @param array $data Associative array with values to add to the given field with same name as the key in $data
+     */
+    public function addData($data) {
+        foreach($this->fields as $field){
+            if($field instanceof FieldContainer){
+                $field->addData($data);
+            } else if ($field instanceof FormField && $field->getName() !== '') {
+                $value = $data[$field->getName()];
+                $field->setValue($value);
+                $field->validate();
+            }
+        }
+    }
+
+    /**
+     * This method will wrap all names of the fields with the $wrap value
+     * As such, it is a dangerous method that will change all names that are available
+     * @param $wrap
+     * @return $this
+     */
+    public function setWrapped($wrap) {
+        /** @var FormField $field */
+        foreach ($this->fields as $field) {
+            $field->setWrapped($wrap);
+        }
+        return $this;
+    }
+
+    public function getErrors() {
+        /** @var FormField $field */
+        foreach ($this->fieldNames as $name => $field) {
+            $errors = $field->getFieldErrors();
+            $this->errors[$name] = $errors;
+        }
+
+        return $this->errors;
+    }
+
+    public function isValid() {
+        return count($this->errors, COUNT_RECURSIVE) - count($this->errors) == 0;
     }
 }

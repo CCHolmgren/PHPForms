@@ -7,7 +7,6 @@ class Forms {
     use FieldContainer;
     protected $method = 'GET';
     protected $url;
-    protected $errors = array();
     protected $errorCount = 0;
     protected $formAttributes = array();
 
@@ -15,25 +14,6 @@ class Forms {
         $this->method = $method;
         $this->url = $url;
         $this->formAttributes = $attributes;
-    }
-
-    /**
-     * Takes data, given field names, adds it to the field and validates it
-     * Maybe it should be the other way around? (validate($data)?)
-     * $data comes in the form [$fieldname => $valuetoaddtothatfield[, ...]]
-     * TODO: Change the order, so that validate happens first
-     * @param array $data Associative array with values to add to the given field with same name as the key in $data
-     */
-    public function addData($data) {
-        foreach ($data as $key => $value) {
-            $field = isset($this->fieldNames[$key]) ? $this->fieldNames[$key] : false;
-            if ($field) {
-                /** @var FormField $field */
-                $field = $this->fieldNames[$key];
-                $field->setValue($value);
-                $field->validate();
-            }
-        }
     }
 
     /**
@@ -142,33 +122,6 @@ class Forms {
         $result .= '</div>';
 
         return $this->formatForm($result);
-    }
-
-    /**
-     * This method will wrap all names of the fields with the $wrap value
-     * As such, it is a dangerous method that will change all names that are available
-     * @param $wrap
-     * @return $this
-     */
-    public function setWrapped($wrap) {
-        /** @var FormField $field */
-        foreach ($this->fields as $field) {
-            $field->setWrapped($wrap);
-        }
-        return $this;
-    }
-
-    public function getErrors() {
-        foreach ($this->fieldNames as $key => $value) {
-            $errors = $value->getErrors();
-            $this->errors[$key] = $errors;
-        }
-
-        return $this->errors;
-    }
-
-    public function isValid() {
-        return count($this->errors, COUNT_RECURSIVE) - count($this->errors) == 0;
     }
 
     /**

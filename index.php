@@ -50,7 +50,7 @@ class PostForm extends Forms {
 }
 
 $x = new PostForm();
-echo $x->buildForm()->asDivs('form-group');
+//echo $x->buildForm()->asDivs('form-group');
 
 echo "<hr>";
 
@@ -83,7 +83,7 @@ $formbuilder->addField(
             ->addField(new ButtonButtonField('', '', ['value' => 'Hello there']))
             ->addField(new PasswordField('password'))
             ->addField(new ButtonField('', 'submit', ['value' => 'Another one']))
-            ->add('Button')// Generic add method. This tries to create a field with the class ButtonField
+            ->add('Button', '', ['value'=>'Button'])// Generic add method. This tries to create a field with the class ButtonField
             ->add('Password', 'password_one_two_three')// Generic add method. This tries to create a field with the class PasswordField, name = '', and type = '' since it doesn't care about type
             ->addField(new TextareaField('test-name', '',
                                          ['value' => 'Hello the textarea']))// Textarea with name test-name, and the type doesn't matter. The text that will be in the textarea is given by 'value'=>'Hello the textarea'
@@ -92,21 +92,21 @@ $formbuilder->addField(
             ->addField($select)// Adding already created elements
             ->addField($fieldset); // Adding a fieldset, that is already created
 
-echo $formbuilder->form->asParagraph();
+//echo $formbuilder->form->asParagraph();
 echo "<hr>";
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $formbuilder->addData($_POST);
 } else if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    $formbuilder->addData($_GET);
+    //$formbuilder->addData($_GET);
 }
 
-echo $formbuilder->form->asUnorderedList();
+//echo $formbuilder->form->asUnorderedList();
 
 echo "<hr>";
 
 $formbuilder->form->setMethod('POST');
-echo $formbuilder->form->asTable();
+//echo $formbuilder->form->asTable();
 
 echo "<hr>";
 
@@ -122,25 +122,27 @@ $test = new FormBuilder();
 $test->addField(new TextareaField('test-name-what'));
 $formbuilder->form->addNested($test->form, 'test');
 
-echo $formbuilder->form->asDivs();
+//echo $formbuilder->form->asDivs();
 
 echo "<hr>";
 
 $login_form = new Forms();
-$login_form->add('text', 'username')
-->add('password', 'password')
-->addButton('Submit');
-echo $login_form->asDivs();
+//$login_form->add('text', 'username')
+//->add('password', 'password')
+//->addButton('Submit');
+//echo $login_form->asDivs();
 
 $register_form = new Forms();
 $register_form->add('text', 'username', ['label'=>['value'=>'Username', 'for'=>'username']])
-->add('password', 'password', ['label'=>['value'=>'Password'], 'attributes'=>['placeholder'=>'Password']])
-->add('password', 'password_confirmation', ['label'=>['value'=>'Confirm password'], 'attributes'=>['placeholder'=>'Repeated password']])
+    ->add('repeatedpassword')
+//->add('password', 'password', ['label'=>['value'=>'Password'], 'attributes'=>['placeholder'=>'Password']])
+//->add('password', 'password_confirmation', ['label'=>['value'=>'Confirm password'], 'attributes'=>['placeholder'=>'Repeated password']])
 ->add('email', 'email', ['label'=>['value'=>'Email']])
     ->addElement(new \PHPForms\Elements\ParagraphElement(['content'=>'What is your name?']))
     ->add('text', 'name-question', ['label'=>['value'=>'Name'], 'id'=>'name-question'])
 ->addButton('Submit');
 echo $register_form->asDivs('form-group');
+$register_form->addData($_GET);
 
 
 ?>

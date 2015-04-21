@@ -3,7 +3,7 @@
 use PHPForms\Elements\HTMLElement;
 use PHPForms\Validators\Validator;
 
-class FormField extends HTMLElement{
+class FormField extends HTMLElement {
     /**
      * @var array PHPForms\Validators\Validator
      */
@@ -37,21 +37,87 @@ class FormField extends HTMLElement{
      * @var string
      */
     protected $value;
-    protected $errors = array();
+    protected $field_errors = array();
     protected $isValid = null;
 
     public function __construct($name = '', $type = '', array $options = []) {
-        $this->name = $name;
+        $this->setName($name);
         $this->setType($type);
-        $this->options = array_merge(['value' => null, 'attributes' => [], 'classes' => [], 'validators' => [], 'id' => ''], $options);
-        $this->value = $this->options['value'];
+        $this->options =
+            array_merge(['value' => null, 'attributes' => [], 'classes' => [], 'validators' => [], 'id' => ''],
+                        $options);
+        $this->setValue($this->options['value']);
         $this->validators = $this->options['validators'];
 
         // Only try to set the id to the name, if there is an id or a name, otherwise it doesn't make much sense
-        if(!empty($this->name) || !empty($this->options['id'])){
-            $id = !empty($this->options['id']) ? $this->options['id']: $this->name;
+        if (!empty($this->name) || !empty($this->options['id'])) {
+            $id = !empty($this->options['id']) ? $this->options['id'] : $this->name;
             $this->setId($id);
         }
+        $this->restInitialize();
+    }
+
+    /**
+     * A method to overload which setups the rest of the things, if you need it
+     * No need here, but sometimes it might be necessary
+     */
+    protected function restInitialize() {
+    }
+
+    /**
+     * @return string
+     */
+    public function getValue() {
+        return $this->value;
+    }
+
+    /**
+     * @param string $text
+     */
+    public function setValue($text) {
+        $this->value = $text;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFieldErrors() {
+        return $this->field_errors;
+    }
+
+    /**
+     *
+     */
+    public function validate() {
+        if (isset($this->validators)) {
+            foreach ($this->validators as $validator) {
+                if ($validator instanceof Validator) {
+                    $result = $validator->validate($this->value);
+                } else {
+                    $result = $validator($this->value);
+                }
+                if ($result !== null) {
+                    $this->field_errors[] = $result;
+                }
+            }
+            if (count($this->field_errors)) {
+                $this->isValid = true;
+            } else {
+                $this->isValid = false;
+            }
+        }
+    }
+
+    public function setWrapped($wrap) {
+        if (!empty($this->name)) {
+            $this->setName($wrap . "[$this->name]");
+        }
+
+        return $this;
+    }
+
+    public function toString() {
+        return $this->renderElement("", false);
     }
 
     /**
@@ -71,8 +137,8 @@ class FormField extends HTMLElement{
             $result .= $this->getClosingTag();
         }
         $result .= $this->getLabelStop();
-        if($showErrors){
-            foreach($this->errors as $value){
+        if ($showErrors) {
+            foreach ($this->field_errors as $value) {
                 $result .= '<span>' . $value . '</span>';
             }
         }
@@ -85,11 +151,12 @@ class FormField extends HTMLElement{
         if (isset($this->options['label']['wrap']) && isset($this->options['label']['value'])) {
             return "<label>{$this->options['label']['value']}";
         } else if (isset($this->options['label']['value'])) {
-            if(isset($this->options['label']['for'])){
+            if (isset($this->options['label']['for'])) {
                 $for = $this->options['label']['for'];
             } else {
                 $for = $this->getId();
             }
+
             return "<label for='{$for}'>{$this->options['label']['value']}</label>";
         } else {
             return "";
@@ -107,7 +174,7 @@ class FormField extends HTMLElement{
         } else if (!empty($this->name)) {
             $result .= " name='{$this->name}'";
         }
-        if($this->selfClosing){
+        if ($this->selfClosing) {
             $result .= " value='{$this->value}'";
         }
         if (!empty($this->options['classes'])) {
@@ -122,7 +189,7 @@ class FormField extends HTMLElement{
             }
         }
         $id = $this->getId();
-        if(!empty($id)){
+        if (!empty($id)) {
             $result .= " id='{$id}'";
         }
         $result .= ">";
@@ -145,44 +212,16 @@ class FormField extends HTMLElement{
     /**
      * @return string
      */
-    public function getValue() {
-        return $this->value;
+    public function getType() {
+        return $this->type;
     }
 
     /**
-     * @param string $text
+     * @param string $type
      */
-    public function setValue($text) {
-        $this->value = $text;
-    }
-
-    /**
-     * @return array
-     */
-    public function getErrors() {
-        return $this->errors;
-    }
-
-    /**
-     *
-     */
-    public function validate() {
-        if (isset($this->validators)) {
-            foreach ($this->validators as $validator) {
-                if ($validator instanceof Validator) {
-                    $result = $validator->validate($this->value);
-                } else {
-                    $result = $validator($this->value);
-                }
-                if ($result !== null) {
-                    $this->errors[] = $result;
-                }
-            }
-            if(count($this->errors)){
-                $this->isValid = true;
-            } else {
-                $this->isValid = false;
-            }
+    public function setType($type) {
+        if ($type !== '') {
+            $this->type = $type;
         }
     }
 
@@ -195,34 +234,8 @@ class FormField extends HTMLElement{
 
     /**
      * @param string $name
-     * @return $this
      */
     public function setName($name) {
         $this->name = $name;
-        return $this;
-    }
-
-    public function setWrapped($wrap) {
-        if(!empty($this->name)){
-            $this->setName($wrap . "[$this->name]");
-        }
-        return $this;
-    }
-    public function toString(){
-        return $this->renderElement("", false);
-    }
-
-    /**
-     * @return string
-     */
-    public function getType() {
-        return $this->type;
-    }
-
-    /**
-     * @param string $type
-     */
-    public function setType($type) {
-        $this->type = $type;
     }
 }
