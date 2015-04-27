@@ -1,10 +1,11 @@
 <?php namespace PHPForms\Forms;
 
-use PHPForms\Fields\FieldContainer;
+use PHPForms\Fields\FieldContainerInterface;
+use PHPForms\Fields\FieldContainerTrait;
 use PHPForms\Fields\FormField;
 
-class Forms {
-    use FieldContainer;
+class Forms implements FieldContainerInterface{
+    use FieldContainerTrait;
     protected $method = 'GET';
     protected $url;
     protected $errorCount = 0;
@@ -105,9 +106,9 @@ class Forms {
      * @return string
      */
     public function asDivs($divClass = "") {
-        $result = '<div>';
+        $result = '';
         foreach ($this->fields as $field) {
-            if($field instanceof FieldContainer){
+            if($field instanceof FieldContainerInterface){
                 $result .= $field->render();
             } else {
                 $result .= "<div";
@@ -119,7 +120,7 @@ class Forms {
                 $result .= '</div>';
             }
         }
-        $result .= '</div>';
+        $result .= '';
 
         return $this->formatForm($result);
     }

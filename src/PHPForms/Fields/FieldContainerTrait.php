@@ -4,7 +4,7 @@ namespace PHPForms\Fields;
 use PHPForms\Elements\HTMLElement;
 use PHPForms\Forms;
 
-trait FieldContainer {
+trait FieldContainerTrait {
     protected $fields = array();
     protected $fieldNames = array();
     protected $errors = array();
@@ -51,7 +51,15 @@ trait FieldContainer {
     public function getValues(){
         $result = [];
         foreach($this->fields as $field){
-            if($field instanceof FormField){
+            if($field instanceof FieldContainerInterface){
+                foreach($field->getFieldNames() as $name=>$nested_field){
+                    if(array_search($name, $result)){
+                        $result[] = $field->getValue();
+                    } else {
+                        $result[$name] = $field->getValue();
+                    }
+                }
+            } else if($field instanceof FormField){
                 $name = $field->getName();
                 if(array_search($name, $result)){
                     $result[] = $field->getValue();
@@ -105,7 +113,7 @@ trait FieldContainer {
      */
     public function addData($data) {
         foreach($this->fields as $field){
-            if($field instanceof FieldContainer){
+            if($field instanceof FieldContainerInterface){
                 $field->addData($data);
             } else if ($field instanceof FormField && $field->getName() !== '') {
                 $value = $data[$field->getName()];

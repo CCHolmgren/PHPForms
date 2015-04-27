@@ -127,22 +127,28 @@ $formbuilder->form->addNested($test->form, 'test');
 echo "<hr>";
 
 $login_form = new Forms();
-//$login_form->add('text', 'username')
-//->add('password', 'password')
-//->addButton('Submit');
-//echo $login_form->asDivs();
+$login_form->add('text', 'username')
+->add('password', 'password')
+->addButton('Submit');
+echo $login_form->asDivs();
 
 $register_form = new Forms();
 $register_form->add('text', 'username', ['label'=>['value'=>'Username', 'for'=>'username']])
     ->add('repeatedpassword')
-//->add('password', 'password', ['label'=>['value'=>'Password'], 'attributes'=>['placeholder'=>'Password']])
-//->add('password', 'password_confirmation', ['label'=>['value'=>'Confirm password'], 'attributes'=>['placeholder'=>'Repeated password']])
+->add('password', 'password', ['label'=>['value'=>'Password'], 'attributes'=>['placeholder'=>'Password']])
+->add('password', 'password_confirmation', ['label'=>['value'=>'Confirm password'], 'attributes'=>['placeholder'=>'Repeated password']])
 ->add('email', 'email', ['label'=>['value'=>'Email']])
     ->addElement(new \PHPForms\Elements\ParagraphElement(['content'=>'What is your name?']))
     ->add('text', 'name-question', ['label'=>['value'=>'Name'], 'id'=>'name-question'])
 ->addButton('Submit');
 echo $register_form->asDivs('form-group');
 $register_form->addData($_GET);
+
+$forum_post = new Forms('POST');
+$forum_post->add('text', 'title')
+->add('textarea', 'content')
+->addButton('Submit');
+echo $forum_post->asDivs('form-group');
 
 
 ?>

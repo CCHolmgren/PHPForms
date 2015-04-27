@@ -3,8 +3,8 @@
 namespace PHPForms\Fields;
 
 
-class FieldContainerField extends FormField implements \Iterator {
-    use FieldContainer;
+class FieldContainerField extends FormField implements \Iterator, FieldContainerInterface {
+    use FieldContainerTrait;
     /**
      * By definition a Field that contains other fields, such as the select field
      * Must be non-selfclosing

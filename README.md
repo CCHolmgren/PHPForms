@@ -154,3 +154,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     $formbuilder->addData($_GET);
 }
 ```
+
+### Extending
+#### FieldContainer
+Because of the way that PHP handles traits and interfaces there is no way to really check if a class is using a trait, without doing some ugly checking.
+As such, when you want to use the FieldContainerTrait you must also implement the FieldContainerInterface. This is so that we can do class hinting, which only works for classes and interfaces, and not for traits.
